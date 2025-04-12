@@ -4,6 +4,7 @@ import { Column as ColumnType } from "../types";
 interface ColumnsContextType {
   columns: ColumnType[];
   handleAddColumn: () => void;
+  handleEditColumn: (id: number, title: string) => void;
 }
 
 // TODO: Remove this
@@ -38,6 +39,7 @@ const initialColumns: ColumnType[] = [
 export const ColumnsContext = createContext<ColumnsContextType>({
   columns: initialColumns,
   handleAddColumn: () => {},
+  handleEditColumn: () => {},
 });
 
 export const ColumnsProvider = ({
@@ -58,9 +60,18 @@ export const ColumnsProvider = ({
     ]);
   };
 
+  const handleEditColumn = (id: number, title: string) => {
+    setColumns(
+      columns.map((column) =>
+        column.id === id ? { ...column, title } : column
+      )
+    );
+  };
+
   const valueToShare = {
     columns,
     handleAddColumn,
+    handleEditColumn,
   };
 
   return (

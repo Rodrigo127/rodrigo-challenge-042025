@@ -12,7 +12,7 @@ function App() {
       <Header title="Kanban Board" />
       <main className="flex-1 flex gap-2 overflow-y-auto">
         {columns.map((column) => (
-          <Column key={column.id} title={column.title}>
+          <Column key={column.id} title={column.title} id={column.id}>
             {column.cards.map((card) => (
               <Card
                 key={card.id}
