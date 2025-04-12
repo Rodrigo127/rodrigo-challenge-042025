@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useColumnsContext } from "../hooks/use-columns-context";
+import CardForm from "./CardForm";
 
 export default function Column({
   children,
@@ -13,6 +14,7 @@ export default function Column({
   const { handleEditColumn, handleAddCard } = useColumnsContext();
   const [isEditing, setIsEditing] = useState(false);
   const [newTitle, setNewTitle] = useState(title);
+  const [isAddingCard, setIsAddingCard] = useState(false);
 
   const onEditColumn = () => {
     setIsEditing(true);
@@ -24,7 +26,7 @@ export default function Column({
   };
 
   const onAddCard = () => {
-    handleAddCard(id);
+    setIsAddingCard(true);
   };
 
   const titleElement = isEditing ? (
@@ -70,6 +72,13 @@ export default function Column({
           Add Card
         </button>
       </div>
+      {isAddingCard && (
+        <CardForm
+          onClose={() => setIsAddingCard(false)}
+          onSubmit={handleAddCard}
+          columnId={id}
+        />
+      )}
     </div>
   );
 }

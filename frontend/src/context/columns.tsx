@@ -5,7 +5,7 @@ interface ColumnsContextType {
   columns: ColumnType[];
   handleAddColumn: () => void;
   handleEditColumn: (id: number, title: string) => void;
-  handleAddCard: (columnId: number) => void;
+  handleAddCard: (title: string, description: string, columnId: number) => void;
 }
 
 // TODO: Remove this
@@ -41,7 +41,7 @@ export const ColumnsContext = createContext<ColumnsContextType>({
   columns: initialColumns,
   handleAddColumn: () => {},
   handleEditColumn: () => {},
-  handleAddCard: () => {},
+  handleAddCard: (title: string, description: string, columnId: number) => {},
 });
 
 export const ColumnsProvider = ({
@@ -70,7 +70,11 @@ export const ColumnsProvider = ({
     );
   };
 
-  const handleAddCard = (columnId: number) => {
+  const handleAddCard = (
+    title: string,
+    description: string,
+    columnId: number
+  ) => {
     setColumns(
       columns.map((column) =>
         column.id === columnId
@@ -80,8 +84,8 @@ export const ColumnsProvider = ({
                 ...column.cards,
                 {
                   id: column.cards.length + 1,
-                  title: `Card ${column.cards.length + 1}`,
-                  description: `Card ${column.cards.length + 1} description`,
+                  title,
+                  description,
                 },
               ],
             }
