@@ -29,7 +29,7 @@ export default function Column({
       value={newTitle}
       onChange={(e) => setNewTitle(e.target.value)}
       onBlur={editColumn}
-      className="text-2xl font-bold pb-2 px-3 pt-3 outline-none border-2 border-rose-400 rounded-t-xl"
+      className="text-2xl font-bold pb-2 px-3 pt-3 outline-none border-2 border-rose-400 rounded-t-xl bg-rose-200"
       autoFocus
       onKeyDown={(e) => {
         if (e.key === "Enter") {
@@ -43,9 +43,18 @@ export default function Column({
       }}
     />
   ) : (
-    <h2 className="text-2xl font-bold pb-2 px-3 pt-3" onClick={onEditColumn}>
-      {title}
-    </h2>
+    <div className="flex">
+      <h2 className="text-2xl font-bold pb-2 px-3 pt-3">{title}</h2>
+      <div className="flex-1 flex pb-2">
+        <button
+          className="text-xs text-gray-500 h-full flex flex-col justify-end"
+          onClick={onEditColumn}
+        >
+          Edit
+        </button>
+        <div className="flex-1 flex justify-end items-center"></div>
+      </div>
+    </div>
   );
 
   return (
