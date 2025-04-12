@@ -66,7 +66,7 @@ export default function Column({
   return (
     <div className="flex flex-col w-96 bg-rose-300 rounded-xl gap-1 h-full">
       {titleElement}
-      <div className="flex flex-col gap-1 flex-1 overflow-y-auto p-3">
+      <div className="flex flex-col gap-1 flex-1 overflow-y-auto p-3 scrollbar-hidden">
         {children}
         <button className="text-xs text-gray-500" onClick={onAddCard}>
           Add Card
