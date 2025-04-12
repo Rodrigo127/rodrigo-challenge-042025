@@ -18,6 +18,8 @@ function App() {
                 key={card.id}
                 title={card.title}
                 description={card.description}
+                columnId={column.id}
+                id={card.id}
               />
             ))}
           </Column>

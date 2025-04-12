@@ -6,7 +6,13 @@ interface CardFormProps {
   title?: string;
   description?: string;
   columnId: number;
-  onSubmit: (title: string, description: string, columnId: number) => void;
+  onSubmit: (
+    title: string,
+    description: string,
+    columnId: number,
+    id?: number
+  ) => void;
+  id?: number;
 }
 
 export default function CardForm({
@@ -14,6 +20,7 @@ export default function CardForm({
   title = "",
   description = "",
   columnId,
+  id,
   onSubmit,
 }: CardFormProps) {
   const [newTitle, setNewTitle] = useState(title);
@@ -21,7 +28,7 @@ export default function CardForm({
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onSubmit(newTitle, newDescription, columnId);
+    onSubmit(newTitle, newDescription, columnId, id);
     onClose();
   };
 

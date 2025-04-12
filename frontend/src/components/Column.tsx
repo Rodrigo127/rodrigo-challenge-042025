@@ -50,10 +50,10 @@ export default function Column({
     />
   ) : (
     <div className="flex">
-      <h2 className="text-2xl font-bold pb-2 px-3 pt-3">{title}</h2>
+      <h2 className="text-2xl font-bold pb-2 px-3 pt-3 truncate">{title}</h2>
       <div className="flex-1 flex pb-2">
         <button
-          className="text-xs text-gray-500 h-full flex flex-col justify-end"
+          className="text-xs text-gray-500 h-full flex flex-col justify-end pr-2"
           onClick={onEditColumn}
         >
           Edit
@@ -64,7 +64,7 @@ export default function Column({
   );
 
   return (
-    <div className="flex flex-col min-w-96 bg-rose-300 rounded-xl gap-1 h-full">
+    <div className="flex flex-col w-96 bg-rose-300 rounded-xl gap-1 h-full">
       {titleElement}
       <div className="flex flex-col gap-1 flex-1 overflow-y-auto p-3">
         {children}

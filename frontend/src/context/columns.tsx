@@ -6,6 +6,12 @@ interface ColumnsContextType {
   handleAddColumn: () => void;
   handleEditColumn: (id: number, title: string) => void;
   handleAddCard: (title: string, description: string, columnId: number) => void;
+  handleEditCard: (
+    title: string,
+    description: string,
+    columnId: number,
+    id: number
+  ) => void;
 }
 
 // TODO: Remove this
@@ -41,7 +47,8 @@ export const ColumnsContext = createContext<ColumnsContextType>({
   columns: initialColumns,
   handleAddColumn: () => {},
   handleEditColumn: () => {},
-  handleAddCard: (title: string, description: string, columnId: number) => {},
+  handleAddCard: () => {},
+  handleEditCard: () => {},
 });
 
 export const ColumnsProvider = ({
@@ -94,11 +101,32 @@ export const ColumnsProvider = ({
     );
   };
 
+  const handleEditCard = (
+    title: string,
+    description: string,
+    columnId: number,
+    id: number
+  ) => {
+    setColumns(
+      columns.map((column) =>
+        column.id === columnId
+          ? {
+              ...column,
+              cards: column.cards.map((card) =>
+                card.id === id ? { ...card, title, description } : card
+              ),
+            }
+          : column
+      )
+    );
+  };
+
   const valueToShare = {
     columns,
     handleAddColumn,
     handleEditColumn,
     handleAddCard,
+    handleEditCard,
   };
 
   return (
