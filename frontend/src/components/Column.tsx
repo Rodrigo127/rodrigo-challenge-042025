@@ -10,7 +10,7 @@ export default function Column({
   title: string;
   id: number;
 }) {
-  const { handleEditColumn } = useColumnsContext();
+  const { handleEditColumn, handleAddCard } = useColumnsContext();
   const [isEditing, setIsEditing] = useState(false);
   const [newTitle, setNewTitle] = useState(title);
 
@@ -21,6 +21,10 @@ export default function Column({
   const editColumn = () => {
     handleEditColumn(id, newTitle);
     setIsEditing(false);
+  };
+
+  const onAddCard = () => {
+    handleAddCard(id);
   };
 
   const titleElement = isEditing ? (
@@ -62,6 +66,9 @@ export default function Column({
       {titleElement}
       <div className="flex flex-col gap-1 flex-1 overflow-y-auto p-3">
         {children}
+        <button className="text-xs text-gray-500" onClick={onAddCard}>
+          Add Card
+        </button>
       </div>
     </div>
   );
