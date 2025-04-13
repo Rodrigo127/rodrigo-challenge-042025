@@ -42,18 +42,20 @@ export default function Card({
       className="bg-white rounded-xl p-5 shadow-md"
       ref={setNodeRef}
       style={style}
-      {...attributes}
-      {...listeners}
     >
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-bold truncate">{card.title}</h3>
+        <div {...attributes} {...listeners} className="flex-1">
+          <h3 className="text-lg font-bold truncate">{card.title}</h3>
+        </div>
         <button className="text-gray-500" onClick={showForm}>
           <AiFillEdit />
         </button>
       </div>
-      <p className="text-sm text-gray-500 w-full break-words">
-        {card.description}
-      </p>
+      <div {...attributes} {...listeners}>
+        <p className="text-sm text-gray-500 w-full break-words">
+          {card.description}
+        </p>
+      </div>
       {isEditing && (
         <CardForm
           onClose={() => setIsEditing(false)}

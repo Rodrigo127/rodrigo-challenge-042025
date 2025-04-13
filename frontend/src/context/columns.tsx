@@ -132,6 +132,7 @@ export const ColumnsProvider = ({
     originalColumnId: number,
     targetColumnId: number
   ) => {
+    if (originalColumnId === targetColumnId) return;
     setColumns(
       columns.map((column) => {
         if (column.id === originalColumnId) {
