@@ -64,13 +64,7 @@ export default function Column({ column }: { column: ColumnType }) {
       {titleElement}
       <div className="flex flex-col gap-1 flex-1 overflow-y-auto p-3 scrollbar-hidden">
         {column.cards.map((card) => (
-          <Card
-            key={card.id}
-            title={card.title}
-            description={card.description}
-            columnId={column.id}
-            id={card.id}
-          />
+          <Card key={card.id} card={card} columnId={column.id} />
         ))}
         <button className="text-xs text-gray-500" onClick={onAddCard}>
           Add Card

@@ -2,17 +2,14 @@ import { AiFillEdit } from "react-icons/ai";
 import { useState } from "react";
 import CardForm from "./CardForm";
 import { useColumnsContext } from "../hooks/use-columns-context";
+import { Card as CardType } from "../types";
 
 export default function Card({
-  title,
-  description,
+  card,
   columnId,
-  id,
 }: {
-  title: string;
-  description: string;
+  card: CardType;
   columnId: number;
-  id: number;
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const { handleEditCard } = useColumnsContext();
@@ -22,27 +19,29 @@ export default function Card({
   };
 
   const handleEdit = (title: string, description: string, columnId: number) => {
-    handleEditCard(title, description, columnId, id);
+    handleEditCard(title, description, columnId, card.id);
     setIsEditing(false);
   };
 
   return (
     <div className="bg-white rounded-xl p-5">
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-bold truncate">{title}</h3>
+        <h3 className="text-lg font-bold truncate">{card.title}</h3>
         <button className="text-gray-500" onClick={showForm}>
           <AiFillEdit />
         </button>
       </div>
-      <p className="text-sm text-gray-500 w-full break-words">{description}</p>
+      <p className="text-sm text-gray-500 w-full break-words">
+        {card.description}
+      </p>
       {isEditing && (
         <CardForm
           onClose={() => setIsEditing(false)}
           onSubmit={handleEdit}
           columnId={columnId}
-          title={title}
-          description={description}
-          id={id}
+          title={card.title}
+          description={card.description}
+          id={card.id}
         />
       )}
     </div>
