@@ -1,11 +1,11 @@
 import Column from "./components/Column";
 import Header from "./components/Header";
-import { CgAdd } from "react-icons/cg";
 import { useColumnsContext } from "./hooks/use-columns-context";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
+import { Card } from "./types";
 
 function App() {
-  const { columns, handleAddColumn, handleMoveCard } = useColumnsContext();
+  const { columns, handleMoveCard } = useColumnsContext();
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -13,9 +13,9 @@ function App() {
     if (!over) return;
 
     handleMoveCard(
-      active.data.current.card,
-      active.data.current.columnId,
-      parseInt(over.id)
+      active.data.current?.card as Card,
+      active.data.current?.columnId as number,
+      parseInt(over.id as string)
     );
   };
 
