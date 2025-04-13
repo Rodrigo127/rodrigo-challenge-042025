@@ -17,6 +17,7 @@ interface ColumnsContextType {
     originalColumnId: number,
     targetColumnId: number
   ) => void;
+  handleDeleteCard: (cardId: number, columnId: number) => void;
 }
 
 // TODO: Remove this
@@ -55,6 +56,7 @@ export const ColumnsContext = createContext<ColumnsContextType>({
   handleAddCard: () => {},
   handleEditCard: () => {},
   handleMoveCard: () => {},
+  handleDeleteCard: () => {},
 });
 
 export const ColumnsProvider = ({
@@ -154,6 +156,19 @@ export const ColumnsProvider = ({
     );
   };
 
+  const handleDeleteCard = (cardId: number, columnId: number) => {
+    setColumns(
+      columns.map((column) =>
+        column.id === columnId
+          ? {
+              ...column,
+              cards: column.cards.filter((card) => card.id !== cardId),
+            }
+          : column
+      )
+    );
+  };
+
   const valueToShare = {
     columns,
     handleAddColumn,
@@ -161,6 +176,7 @@ export const ColumnsProvider = ({
     handleAddCard,
     handleEditCard,
     handleMoveCard,
+    handleDeleteCard,
   };
 
   return (

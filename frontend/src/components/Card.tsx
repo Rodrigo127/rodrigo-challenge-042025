@@ -1,10 +1,10 @@
-import { AiFillEdit } from "react-icons/ai";
+import { AiFillEdit, AiFillDelete } from "react-icons/ai";
 import { useState } from "react";
 import CardForm from "./CardForm";
 import { useColumnsContext } from "../hooks/use-columns-context";
 import { Card as CardType } from "../types";
 import { useDraggable } from "@dnd-kit/core";
-
+import ConfirmForm from "./ConfirmForm";
 export default function Card({
   card,
   columnId,
@@ -13,10 +13,20 @@ export default function Card({
   columnId: number;
 }) {
   const [isEditing, setIsEditing] = useState(false);
-  const { handleEditCard } = useColumnsContext();
+  const { handleEditCard, handleDeleteCard } = useColumnsContext();
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const showForm = () => {
     setIsEditing(true);
+  };
+
+  const showDeleteForm = () => {
+    setIsDeleting(true);
+  };
+
+  const handleDelete = () => {
+    handleDeleteCard(card.id, columnId);
+    setIsDeleting(false);
   };
 
   const handleEdit = (title: string, description: string, columnId: number) => {
@@ -50,6 +60,12 @@ export default function Card({
         <button className="text-gray-500" onClick={showForm}>
           <AiFillEdit />
         </button>
+        <button
+          className="text-gray-500 hover:text-red-500 transition-colors pl-2"
+          onClick={showDeleteForm}
+        >
+          <AiFillDelete />
+        </button>
       </div>
       <div {...attributes} {...listeners}>
         <p className="text-sm text-gray-500 w-full break-words">
@@ -64,6 +80,13 @@ export default function Card({
           title={card.title}
           description={card.description}
           id={card.id}
+        />
+      )}
+      {isDeleting && (
+        <ConfirmForm
+          onClose={() => setIsDeleting(false)}
+          onConfirm={handleDelete}
+          title={card.title}
         />
       )}
     </div>
