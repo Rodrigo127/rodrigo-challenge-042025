@@ -65,6 +65,7 @@ export const ColumnsProvider = ({
   children: React.ReactNode;
 }) => {
   const [columns, setColumns] = useState<ColumnType[]>(initialColumns);
+  console.log(JSON.stringify(columns, null, 2));
 
   const handleAddColumn = () => {
     setColumns([
