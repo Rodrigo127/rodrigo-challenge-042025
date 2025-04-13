@@ -19,5 +19,19 @@ class Query(graphene.ObjectType):
 
     def resolve_columns(self, info):
         return Column.objects.all()
+    
+class CreateColumnMutation(graphene.Mutation):
+    class Arguments:
+        title = graphene.String()
 
-schema = graphene.Schema(query=Query)
+    column = graphene.Field(ColumnType)
+    
+    def mutate(self, info, title):
+        column = Column(title=title)
+        column.save()
+        return CreateColumnMutation(column=column)
+
+class Mutation(graphene.ObjectType):
+    create_column = CreateColumnMutation.Field()
+
+schema = graphene.Schema(query=Query, mutation=Mutation)
