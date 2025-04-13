@@ -1,19 +1,13 @@
 import { useState } from "react";
 import { useColumnsContext } from "../hooks/use-columns-context";
 import CardForm from "./CardForm";
+import { Column as ColumnType } from "../types";
+import Card from "./Card";
 
-export default function Column({
-  children,
-  title,
-  id,
-}: {
-  children?: React.ReactNode;
-  title: string;
-  id: number;
-}) {
+export default function Column({ column }: { column: ColumnType }) {
   const { handleEditColumn, handleAddCard } = useColumnsContext();
   const [isEditing, setIsEditing] = useState(false);
-  const [newTitle, setNewTitle] = useState(title);
+  const [newTitle, setNewTitle] = useState(column.title);
   const [isAddingCard, setIsAddingCard] = useState(false);
 
   const onEditColumn = () => {
@@ -21,7 +15,7 @@ export default function Column({
   };
 
   const editColumn = () => {
-    handleEditColumn(id, newTitle);
+    handleEditColumn(column.id, newTitle);
     setIsEditing(false);
   };
 
@@ -44,13 +38,15 @@ export default function Column({
 
         if (e.key === "Escape") {
           setIsEditing(false);
-          setNewTitle(title);
+          setNewTitle(column.title);
         }
       }}
     />
   ) : (
     <div className="flex">
-      <h2 className="text-2xl font-bold pb-2 px-3 pt-3 truncate">{title}</h2>
+      <h2 className="text-2xl font-bold pb-2 px-3 pt-3 truncate">
+        {column.title}
+      </h2>
       <div className="flex-1 flex pb-2">
         <button
           className="text-xs text-gray-500 h-full flex flex-col justify-end pr-2"
@@ -67,7 +63,15 @@ export default function Column({
     <div className="flex flex-col w-96 bg-rose-300 rounded-xl gap-1 h-full">
       {titleElement}
       <div className="flex flex-col gap-1 flex-1 overflow-y-auto p-3 scrollbar-hidden">
-        {children}
+        {column.cards.map((card) => (
+          <Card
+            key={card.id}
+            title={card.title}
+            description={card.description}
+            columnId={column.id}
+            id={card.id}
+          />
+        ))}
         <button className="text-xs text-gray-500" onClick={onAddCard}>
           Add Card
         </button>
@@ -76,7 +80,7 @@ export default function Column({
         <CardForm
           onClose={() => setIsAddingCard(false)}
           onSubmit={handleAddCard}
-          columnId={id}
+          columnId={column.id}
         />
       )}
     </div>

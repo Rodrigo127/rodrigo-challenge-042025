@@ -1,5 +1,4 @@
 import Column from "./components/Column";
-import Card from "./components/Card";
 import Header from "./components/Header";
 import { CgAdd } from "react-icons/cg";
 import { useColumnsContext } from "./hooks/use-columns-context";
@@ -12,17 +11,7 @@ function App() {
       <Header title="Kanban Board" />
       <main className="flex-1 flex gap-2 overflow-y-auto">
         {columns.map((column) => (
-          <Column key={column.id} title={column.title} id={column.id}>
-            {column.cards.map((card) => (
-              <Card
-                key={card.id}
-                title={card.title}
-                description={card.description}
-                columnId={column.id}
-                id={card.id}
-              />
-            ))}
-          </Column>
+          <Column key={column.id} column={column} />
         ))}
         <div className="rounded-xl flex items-center justify-center">
           <button
