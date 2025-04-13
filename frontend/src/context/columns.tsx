@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-import { Column as ColumnType } from "../types";
+import { Column as ColumnType, Card as CardType } from "../types";
 
 interface ColumnsContextType {
   columns: ColumnType[];
@@ -11,6 +11,11 @@ interface ColumnsContextType {
     description: string,
     columnId: number,
     id: number
+  ) => void;
+  handleMoveCard: (
+    card: CardType,
+    originalColumnId: number,
+    targetColumnId: number
   ) => void;
 }
 
@@ -49,6 +54,7 @@ export const ColumnsContext = createContext<ColumnsContextType>({
   handleEditColumn: () => {},
   handleAddCard: () => {},
   handleEditCard: () => {},
+  handleMoveCard: () => {},
 });
 
 export const ColumnsProvider = ({
@@ -121,12 +127,39 @@ export const ColumnsProvider = ({
     );
   };
 
+  const handleMoveCard = (
+    card: CardType,
+    originalColumnId: number,
+    targetColumnId: number
+  ) => {
+    setColumns(
+      columns.map((column) => {
+        if (column.id === originalColumnId) {
+          return {
+            ...column,
+            cards: column.cards.filter((c) => c.id !== card.id),
+          };
+        }
+
+        if (column.id === targetColumnId) {
+          return {
+            ...column,
+            cards: [...column.cards, card],
+          };
+        }
+
+        return column;
+      })
+    );
+  };
+
   const valueToShare = {
     columns,
     handleAddColumn,
     handleEditColumn,
     handleAddCard,
     handleEditCard,
+    handleMoveCard,
   };
 
   return (

@@ -3,6 +3,7 @@ import { useState } from "react";
 import CardForm from "./CardForm";
 import { useColumnsContext } from "../hooks/use-columns-context";
 import { Card as CardType } from "../types";
+import { useDraggable } from "@dnd-kit/core";
 
 export default function Card({
   card,
@@ -23,8 +24,27 @@ export default function Card({
     setIsEditing(false);
   };
 
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id: card.id.toString(),
+    data: {
+      type: "card",
+      card,
+      columnId,
+    },
+  });
+
+  const style = transform
+    ? { transform: `translate3d(${transform.x}px, ${transform.y}px, 0)` }
+    : undefined;
+
   return (
-    <div className="bg-white rounded-xl p-5">
+    <div
+      className="bg-white rounded-xl p-5 shadow-md"
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+    >
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-bold truncate">{card.title}</h3>
         <button className="text-gray-500" onClick={showForm}>

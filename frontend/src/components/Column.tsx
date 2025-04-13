@@ -3,6 +3,7 @@ import { useColumnsContext } from "../hooks/use-columns-context";
 import CardForm from "./CardForm";
 import { Column as ColumnType } from "../types";
 import Card from "./Card";
+import { useDroppable } from "@dnd-kit/core";
 
 export default function Column({ column }: { column: ColumnType }) {
   const { handleEditColumn, handleAddCard } = useColumnsContext();
@@ -22,6 +23,12 @@ export default function Column({ column }: { column: ColumnType }) {
   const onAddCard = () => {
     setIsAddingCard(true);
   };
+
+  const { setNodeRef, isOver } = useDroppable({
+    id: column.id.toString(),
+  });
+
+  const isOverStyle = isOver ? "bg-gray-100" : "";
 
   const titleElement = isEditing ? (
     <input
@@ -62,7 +69,10 @@ export default function Column({ column }: { column: ColumnType }) {
   return (
     <div className="flex flex-col w-96 bg-rose-300 rounded-xl gap-1 h-full">
       {titleElement}
-      <div className="flex flex-col gap-1 flex-1 overflow-y-auto p-3 scrollbar-hidden">
+      <div
+        className={`flex flex-col gap-1 flex-1 p-3 scrollbar-hidden ${isOverStyle}`}
+        ref={setNodeRef}
+      >
         {column.cards.map((card) => (
           <Card key={card.id} card={card} columnId={column.id} />
         ))}
