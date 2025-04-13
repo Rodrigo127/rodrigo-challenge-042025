@@ -67,7 +67,7 @@ export default function Column({ column }: { column: ColumnType }) {
   );
 
   return (
-    <div className="flex flex-col w-96 bg-rose-300 rounded-xl gap-1 h-full">
+    <div className="flex flex-col w-96 bg-rose-300 rounded-xl gap-1 h-fit">
       {titleElement}
       <div
         className={`flex flex-col gap-1 flex-1 p-3 scrollbar-hidden ${isOverStyle}`}
