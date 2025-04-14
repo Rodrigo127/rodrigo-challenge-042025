@@ -45,7 +45,6 @@ export const ColumnsProvider = ({
   const [updateColumnCards] = useMutation(UPDATE_COLUMN_CARDS);
   const [createColumn] = useMutation(CREATE_COLUMN);
   const [columns, setColumns] = useState<ColumnType[]>([]);
-  console.log(data);
 
   useEffect(() => {
     if (data) {
@@ -63,16 +62,18 @@ export const ColumnsProvider = ({
       variables: {
         title: `Column ${columns.length + 1}`,
       },
+    }).then((result) => {
+      const newColumn = result.data.createColumn.column;
+      setColumns([
+        ...columns,
+        {
+          id: newColumn.id,
+          title: newColumn.title,
+          cards: JSON.parse(newColumn.cards as string),
+          order: newColumn.order,
+        },
+      ]);
     });
-
-    setColumns([
-      ...columns,
-      {
-        id: columns.length + 1,
-        title: `Column ${columns.length + 1}`,
-        cards: [],
-      },
-    ]);
   };
 
   const handleEditColumn = (id: number, title: string) => {
