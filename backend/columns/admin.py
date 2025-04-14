@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import Card, Column
+from .models import Column
 
 # Register your models here.
-admin.site.register(Card)
 admin.site.register(Column)
