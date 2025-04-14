@@ -3,12 +3,13 @@ import boto3
 from botocore.config import Config
 import uuid
 from datetime import datetime
+import os
 
 class DynamoDBService:
     def __init__(self):
         self.dynamodb = boto3.resource(
             'dynamodb',
-            endpoint_url='http://localhost:8000',
+            endpoint_url=os.getenv('DYNAMODB_ENDPOINT_URL', 'http://localhost:8000'),
             region_name='us-west-2',
             aws_access_key_id='dummy',
             aws_secret_access_key='dummy'

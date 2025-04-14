@@ -1,9 +1,9 @@
 # create_table.py
 import boto3
-
+import os
 dynamodb = boto3.resource(
     'dynamodb',
-    endpoint_url='http://localhost:8000',
+    endpoint_url=os.getenv('DYNAMODB_ENDPOINT_URL', 'http://localhost:8000'),
     region_name='us-west-2',
     aws_access_key_id='dummy',
     aws_secret_access_key='dummy'
