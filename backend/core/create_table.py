@@ -16,20 +16,12 @@ try:
             {
                 'AttributeName': 'id',
                 'KeyType': 'HASH'
-            },
-            {
-                'AttributeName': 'order',
-                'KeyType': 'RANGE'
             }
         ],
         AttributeDefinitions=[
             {
                 'AttributeName': 'id',
                 'AttributeType': 'S'
-            },
-            {
-                'AttributeName': 'order',
-                'AttributeType': 'N'
             }
         ],
         ProvisionedThroughput={

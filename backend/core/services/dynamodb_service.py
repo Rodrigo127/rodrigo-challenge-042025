@@ -20,7 +20,6 @@ class DynamoDBService:
             response = self.table.update_item(
                 Key={
                     'id': 'COUNTER',
-                    'order': 999
                 },
                 UpdateExpression='SET nextIndex = if_not_exists(nextIndex, :start) + :inc',
                 ExpressionAttributeValues={
@@ -48,23 +47,23 @@ class DynamoDBService:
     def create_column(self, title):
         column_id = str(uuid.uuid4())
         sk = self.get_next_sk()
+
         self.table.put_item(
             Item={
                 'id': f'{column_id}',
-                'order': sk,
+                'colIndex': sk,
                 'title': title,
                 'cards': [],
                 'createdAt': datetime.now().isoformat(),
                 'updatedAt': datetime.now().isoformat()
             }
         )
-        return self.get_column(column_id, sk)
+        return self.get_column(column_id)
 
-    def get_column(self, column_id, sk):
+    def get_column(self, column_id):
         response = self.table.get_item(
             Key={
                 'id': f'{column_id}',
-                'order': sk
             }
         )
         return response.get('Item')
@@ -77,21 +76,21 @@ class DynamoDBService:
             }
         )
         items = response.get('Items', [])
-        items.sort(key=lambda x: x['order'])
+        items.sort(key=lambda x: x['colIndex'])
         return items
 
 
-    def update_column_cards(self, column_id, cards, sk, title):
+    def update_column_cards(self, column_id, cards, colIndex, title):
         self.table.update_item(
             Key={
                 'id': f'{column_id}',
-                'order': sk
             },
-            UpdateExpression='SET cards = :cards, updatedAt = :now, title = :title',
+            UpdateExpression='SET cards = :cards, updatedAt = :now, title = :title, colIndex = :colIndex',
             ExpressionAttributeValues={
                 ':cards': cards,
                 ':now': datetime.now().isoformat(),
-                ':title': title
+                ':title': title,
+                ':colIndex': colIndex
             }
         )
-        return self.get_column(column_id, sk)
+        return self.get_column(column_id)
