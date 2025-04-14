@@ -6,6 +6,7 @@ import {
   UPDATE_COLUMN_CARDS,
   CREATE_COLUMN,
 } from "../graphql/queries";
+import { v4 as uuidv4 } from "uuid";
 
 interface ColumnsContextType {
   columns: ColumnType[];
@@ -103,8 +104,9 @@ export const ColumnsProvider = ({
   ) => {
     const column = columns.find((column) => column.id === columnId);
     if (!column) return;
+    const uuid = uuidv4();
     const newCard = {
-      id: `${column.id}-${column.cards.length + 1}`,
+      id: `${uuid}`,
       title,
       description,
     };
@@ -162,25 +164,48 @@ export const ColumnsProvider = ({
     targetColumnId: number
   ) => {
     if (originalColumnId === targetColumnId) return;
-    setColumns(
-      columns.map((column) => {
-        if (column.id === originalColumnId) {
-          return {
-            ...column,
-            cards: column.cards.filter((c) => c.id !== card.id),
-          };
-        }
-
-        if (column.id === targetColumnId) {
-          return {
-            ...column,
-            cards: [...column.cards, card],
-          };
-        }
-
-        return column;
-      })
+    const originalColumn = columns.find(
+      (column) => column.id === originalColumnId
     );
+    const targetColumn = columns.find((column) => column.id === targetColumnId);
+    if (!originalColumn || !targetColumn) return;
+    const updatedCardsOriginalColumn = (
+      originalColumn.cards as CardType[]
+    ).filter((c) => c.id !== card.id);
+    const updatedCardsTargetColumn = [
+      ...(targetColumn.cards as CardType[]),
+      card,
+    ];
+
+    updateColumnCards({
+      variables: {
+        id: targetColumnId,
+        cards: JSON.stringify(updatedCardsTargetColumn),
+        order: targetColumn.order,
+        title: targetColumn.title,
+      },
+    }).then(() => {
+      updateColumnCards({
+        variables: {
+          id: originalColumnId,
+          cards: JSON.stringify(updatedCardsOriginalColumn),
+          order: originalColumn.order,
+          title: originalColumn.title,
+        },
+      }).then(() => {
+        setColumns(
+          columns.map((column) => {
+            if (column.id === originalColumnId) {
+              return { ...column, cards: updatedCardsOriginalColumn };
+            }
+            if (column.id === targetColumnId) {
+              return { ...column, cards: updatedCardsTargetColumn };
+            }
+            return column;
+          })
+        );
+      });
+    });
   };
 
   const handleDeleteCard = (cardId: number, columnId: number) => {
