@@ -25,8 +25,8 @@ export const CREATE_COLUMN = gql`
 `;
 
 export const UPDATE_COLUMN_CARDS = gql`
-  mutation updateColumnCards($id: String!, $cards: JSONString!, $order: String!) {
-    updateColumnCards(id: $id, cards: $cards, order: $order) {
+  mutation updateColumnCards($id: String!, $cards: JSONString!, $order: Int!, $title: String!) {
+    updateColumnCards(id: $id, cards: $cards, order: $order, title: $title) {
       column {
         id
         order

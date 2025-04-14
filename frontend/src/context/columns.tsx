@@ -10,7 +10,7 @@ import {
 interface ColumnsContextType {
   columns: ColumnType[];
   handleAddColumn: () => void;
-  handleEditColumn: (id: number, title: string) => void;
+  handleEditColumn: (column: ColumnType, newTitle: string) => void;
   handleAddCard: (title: string, description: string, columnId: number) => void;
   handleEditCard: (
     title: string,
@@ -76,12 +76,24 @@ export const ColumnsProvider = ({
     });
   };
 
-  const handleEditColumn = (id: number, title: string) => {
-    setColumns(
-      columns.map((column) =>
-        column.id === id ? { ...column, title } : column
-      )
-    );
+  const handleEditColumn = (column: ColumnType, newTitle: string) => {
+    updateColumnCards({
+      variables: {
+        id: column.id,
+        title: newTitle,
+        cards: JSON.stringify(column.cards),
+        order: column.order,
+      },
+    }).then((result) => {
+      const updatedColumn = result.data.updateColumnCards.column;
+      setColumns(
+        columns.map((column) =>
+          column.id === updatedColumn.id
+            ? { ...column, title: updatedColumn.title }
+            : column
+        )
+      );
+    });
   };
 
   const handleAddCard = (
@@ -102,11 +114,12 @@ export const ColumnsProvider = ({
         id: columnId,
         cards: JSON.stringify([...(column.cards as CardType[]), newCard]),
         order: column.order,
+        title: column.title,
       },
+    }).then(() => {
+      column.cards = [...(column.cards as CardType[]), newCard] as CardType[];
+      setColumns([...columns]);
     });
-
-    column.cards = [...(column.cards as CardType[]), newCard] as CardType[];
-    setColumns([...columns]);
   };
 
   const handleEditCard = (

@@ -16,7 +16,7 @@ export default function Column({ column }: { column: ColumnType }) {
   };
 
   const editColumn = () => {
-    handleEditColumn(column.id, newTitle);
+    handleEditColumn(column, newTitle);
     setIsEditing(false);
   };
 
