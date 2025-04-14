@@ -1,5 +1,8 @@
 version: "3.8"
 
+# Instructions:
+# - Run `docker compose up --build` to start the containers
+
 services:
   frontend:
     build: ./frontend
