@@ -1,5 +1,7 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 import { Column as ColumnType, Card as CardType } from "../types";
+import { useQuery, useMutation } from "@apollo/client";
+import { GET_COLUMNS, CREATE_COLUMN } from "../graphql/queries";
 
 interface ColumnsContextType {
   columns: ColumnType[];
@@ -20,37 +22,8 @@ interface ColumnsContextType {
   handleDeleteCard: (cardId: number, columnId: number) => void;
 }
 
-// TODO: Remove this
-const initialColumns: ColumnType[] = [
-  {
-    id: 1,
-    title: "Column 1",
-    cards: [
-      { id: 1, title: "Card 1", description: "Card 1 description" },
-      { id: 2, title: "Card 2", description: "Card 2 description" },
-      { id: 3, title: "Card 3", description: "Card 3 description" },
-    ],
-  },
-  {
-    id: 2,
-    title: "Column 2",
-    cards: [
-      ...Array.from({ length: 14 }, (_, i) => ({
-        id: i + 4,
-        title: `Card ${i + 4}`,
-        description: `Card ${i + 4} description`,
-      })),
-    ],
-  },
-  {
-    id: 3,
-    title: "Column 3",
-    cards: [],
-  },
-];
-
 export const ColumnsContext = createContext<ColumnsContextType>({
-  columns: initialColumns,
+  columns: [],
   handleAddColumn: () => {},
   handleEditColumn: () => {},
   handleAddCard: () => {},
@@ -64,8 +37,19 @@ export const ColumnsProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [columns, setColumns] = useState<ColumnType[]>(initialColumns);
-  console.log(JSON.stringify(columns, null, 2));
+  const { loading, error, data } = useQuery(GET_COLUMNS);
+  const [columns, setColumns] = useState<ColumnType[]>([]);
+
+  useEffect(() => {
+    if (data) {
+      setColumns(
+        data.columns.map((column: ColumnType) => ({
+          ...column,
+          cards: JSON.parse(column?.cards as string),
+        }))
+      );
+    }
+  }, [data]);
 
   const handleAddColumn = () => {
     setColumns([

@@ -8,6 +8,6 @@ export interface Card {
 export interface Column {
   id: number;
   title: string;
-  cards: Card[];
+  cards: Card[] | string;
 }
 
