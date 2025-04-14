@@ -19,8 +19,8 @@ class DynamoDBService:
         try:
             response = self.table.update_item(
                 Key={
-                    'PK': 'COUNTER',
-                    'SK': 'COUNTER'
+                    'id': 'COUNTER',
+                    'order': 'COUNTER'
                 },
                 UpdateExpression='SET nextIndex = if_not_exists(nextIndex, :start) + :inc',
                 ExpressionAttributeValues={
@@ -34,8 +34,8 @@ class DynamoDBService:
             # If counter doesn't exist, create it
             self.table.put_item(
                 Item={
-                    'PK': 'COUNTER',
-                    'SK': 'COUNTER',
+                    'id': 'COUNTER',
+                    'order': 'COUNTER',
                     'nextIndex': 1
                 }
             )
@@ -47,8 +47,8 @@ class DynamoDBService:
         sk = self.get_next_sk()
         self.table.put_item(
             Item={
-                'PK': f'{column_id}',
-                'SK': f'{sk}',
+                'id': f'{column_id}',
+                'order': f'{sk}',
                 'title': title,
                 'cards': [],
                 'createdAt': datetime.now().isoformat(),
@@ -60,17 +60,17 @@ class DynamoDBService:
     def get_column(self, column_id, sk):
         response = self.table.get_item(
             Key={
-                'PK': f'{column_id}',
-                'SK': f'{sk}'
+                'id': f'{column_id}',
+                'order': f'{sk}'
             }
         )
         return response.get('Item')
 
     def get_columns(self):
         response = self.table.scan(
-            FilterExpression='PK <> :counter_pk',
+            FilterExpression='id <> :counter_id',
             ExpressionAttributeValues={
-                ':counter_pk': 'COUNTER'
+                ':counter_id': 'COUNTER'
             }
         )
         return response.get('Items', [])
@@ -78,8 +78,8 @@ class DynamoDBService:
     def update_column_cards(self, column_id, cards, sk):
         self.table.update_item(
             Key={
-                'PK': f'{column_id}',
-                'SK': f'{sk}'
+                'id': f'{column_id}',
+                'order': f'{sk}'
             },
             UpdateExpression='SET cards = :cards, updatedAt = :now',
             ExpressionAttributeValues={

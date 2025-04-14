@@ -14,21 +14,21 @@ try:
         TableName='columns',
         KeySchema=[
             {
-                'AttributeName': 'PK',
+                'AttributeName': 'id',
                 'KeyType': 'HASH'
             },
             {
-                'AttributeName': 'SK',
+                'AttributeName': 'order',
                 'KeyType': 'RANGE'
             }
         ],
         AttributeDefinitions=[
             {
-                'AttributeName': 'PK',
+                'AttributeName': 'id',
                 'AttributeType': 'S'
             },
             {
-                'AttributeName': 'SK',
+                'AttributeName': 'order',
                 'AttributeType': 'S'
             }
         ],
