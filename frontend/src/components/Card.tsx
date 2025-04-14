@@ -53,8 +53,8 @@ export default function Card({
       ref={setNodeRef}
       style={style}
     >
-      <div className="flex justify-between items-center">
-        <div {...attributes} {...listeners} className="flex-1">
+      <div className="flex justify-between items-center bg-gray-100 rounded-md px-1">
+        <div {...attributes} {...listeners} className="flex-1 cursor-grab ">
           <h3 className="text-lg font-bold truncate">{card.title}</h3>
         </div>
         <button className="text-gray-500" onClick={showForm}>
