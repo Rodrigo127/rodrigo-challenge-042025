@@ -76,7 +76,10 @@ class DynamoDBService:
                 ':counter_id': 'COUNTER'
             }
         )
-        return response.get('Items', [])
+        items = response.get('Items', [])
+        items.sort(key=lambda x: x['order'])
+        return items
+
 
     def update_column_cards(self, column_id, cards, sk):
         self.table.update_item(
