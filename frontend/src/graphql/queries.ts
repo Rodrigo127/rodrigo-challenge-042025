@@ -6,7 +6,7 @@ export const GET_COLUMNS = gql`
       id
       title
       cards
-      order
+      colIndex
     }
   }
 `;
@@ -18,18 +18,18 @@ export const CREATE_COLUMN = gql`
         id
         title
         cards
-        order
+        colIndex
       }
     }
   }
 `;
 
 export const UPDATE_COLUMN_CARDS = gql`
-  mutation updateColumnCards($id: String!, $cards: JSONString!, $order: Int!, $title: String!) {
-    updateColumnCards(id: $id, cards: $cards, order: $order, title: $title) {
+  mutation updateColumnCards($id: String!, $cards: JSONString!, $colIndex: Int!, $title: String!) {
+    updateColumnCards(id: $id, cards: $cards, colIndex: $colIndex, title: $title) {
       column {
         id
-        order
+        colIndex
         title
         cards
       }

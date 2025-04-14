@@ -25,9 +25,11 @@ function App() {
       <Header title="Kanban Board" />
       <main className="flex-1 flex gap-2 overflow-y-auto">
         <DndContext onDragEnd={handleDragEnd}>
-          {columns.map((column) => (
-            <Column key={column.id} column={column} />
-          ))}
+          {columns
+            .sort((a, b) => a.colIndex - b.colIndex)
+            .map((column) => (
+              <Column key={column.id} column={column} />
+            ))}
         </DndContext>
         <div className="rounded-xl flex items-center justify-center">
           <button

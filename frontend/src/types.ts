@@ -9,6 +9,6 @@ export interface Column {
   id: string;
   title: string;
   cards: Card[] | string;
-  order: number;
+  colIndex: number;
 }
 

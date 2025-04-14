@@ -25,6 +25,7 @@ interface ColumnsContextType {
     targetColumnId: string
   ) => void;
   handleDeleteCard: (cardId: string, columnId: string) => void;
+  handleReorderColumns: (columns: ColumnType[]) => void;
 }
 
 // eslint-disable-next-line
@@ -36,6 +37,7 @@ export const ColumnsContext = createContext<ColumnsContextType>({
   handleEditCard: () => {},
   handleMoveCard: () => {},
   handleDeleteCard: () => {},
+  handleReorderColumns: () => {},
 });
 
 export const ColumnsProvider = ({
@@ -72,7 +74,7 @@ export const ColumnsProvider = ({
           id: newColumn.id,
           title: newColumn.title,
           cards: JSON.parse(newColumn.cards as string),
-          order: newColumn.order,
+          colIndex: newColumn.colIndex,
         },
       ]);
     });
@@ -84,7 +86,7 @@ export const ColumnsProvider = ({
         id: column.id,
         title: newTitle,
         cards: JSON.stringify(column.cards),
-        order: column.order,
+        colIndex: column.colIndex,
       },
     }).then((result) => {
       const updatedColumn = result.data.updateColumnCards.column;
@@ -116,7 +118,7 @@ export const ColumnsProvider = ({
       variables: {
         id: columnId,
         cards: JSON.stringify([...(column.cards as CardType[]), newCard]),
-        order: column.order,
+        colIndex: column.colIndex,
         title: column.title,
       },
     }).then(() => {
@@ -142,7 +144,7 @@ export const ColumnsProvider = ({
       variables: {
         id: columnId,
         cards: JSON.stringify(updatedCards),
-        order: column.order,
+        colIndex: column.colIndex,
         title: column.title,
       },
     }).then(() => {
@@ -182,7 +184,7 @@ export const ColumnsProvider = ({
       variables: {
         id: targetColumnId,
         cards: JSON.stringify(updatedCardsTargetColumn),
-        order: targetColumn.order,
+        colIndex: targetColumn.colIndex,
         title: targetColumn.title,
       },
     }).then(() => {
@@ -190,7 +192,7 @@ export const ColumnsProvider = ({
         variables: {
           id: originalColumnId,
           cards: JSON.stringify(updatedCardsOriginalColumn),
-          order: originalColumn.order,
+          colIndex: originalColumn.colIndex,
           title: originalColumn.title,
         },
       }).then(() => {
@@ -220,7 +222,7 @@ export const ColumnsProvider = ({
       variables: {
         id: columnId,
         cards: JSON.stringify(updatedCards),
-        order: column.order,
+        colIndex: column.colIndex,
         title: column.title,
       },
     }).then(() => {
@@ -237,6 +239,23 @@ export const ColumnsProvider = ({
     });
   };
 
+  const handleReorderColumns = (newColumns: ColumnType[]) => {
+    Promise.all(
+      newColumns.map((column) => {
+        updateColumnCards({
+          variables: {
+            id: column.id,
+            cards: JSON.stringify(column.cards),
+            colIndex: column.colIndex,
+            title: column.title,
+          },
+        });
+      })
+    ).then(() => {
+      setColumns([...newColumns.sort((a, b) => a.colIndex - b.colIndex)]);
+    });
+  };
+
   const valueToShare = {
     columns,
     handleAddColumn,
@@ -245,6 +264,7 @@ export const ColumnsProvider = ({
     handleEditCard,
     handleMoveCard,
     handleDeleteCard,
+    handleReorderColumns,
   };
 
   return (
