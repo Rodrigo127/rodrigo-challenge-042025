@@ -1,13 +1,23 @@
 version: "3.8"
 
 services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:80"
+    environment:
+      - VITE_API_URL=http://frontend:8003
+    depends_on:
+      - backend
+
   backend:
     build: ./backend
     ports:
       - "8003:8003"
     environment:
       - DEBUG=1
-      - DYNAMODB_ENDPOINT_URL=http://dynamodb-local:8000 # Point to the container name
+      - DYNAMODB_ENDPOINT_URL=http://dynamodb-local:8000
+      - CORS_ALLOWED_ORIGINS=http://localhost:5173
     depends_on:
       - dynamodb-local
 

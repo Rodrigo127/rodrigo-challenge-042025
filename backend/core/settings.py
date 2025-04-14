@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -134,5 +135,5 @@ DYNAMODB_TABLE_NAME = 'columns'
 
 # CORS settings
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # Add your frontend URL here
+    os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:5173')
 ]
