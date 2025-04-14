@@ -4,6 +4,8 @@ from .services.dynamodb_service import DynamoDBService
 
 class ColumnType(graphene.ObjectType):
     id = graphene.String()
+    PK = graphene.String()
+    SK = graphene.String()
     title = graphene.String()
     cards = graphene.JSONString()
 
@@ -27,15 +29,15 @@ class CreateColumnMutation(graphene.Mutation):
 
 class UpdateColumnCardsMutation(graphene.Mutation):
     class Arguments:
-        id = graphene.String()
+        PK = graphene.String()
+        SK = graphene.String()
         cards = graphene.JSONString()
-        sk = graphene.String()
 
     column = graphene.Field(ColumnType)
     
-    def mutate(self, info, id, cards, sk):
+    def mutate(self, info, PK, SK, cards):
         dynamodb = DynamoDBService()
-        column = dynamodb.update_column_cards(id, cards, sk)
+        column = dynamodb.update_column_cards(PK, cards, SK)
         return UpdateColumnCardsMutation(column=column)
 
 class Mutation(graphene.ObjectType):
