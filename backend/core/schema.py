@@ -27,7 +27,20 @@ class CreateColumnMutation(graphene.Mutation):
         return CreateColumnMutation(column=column)
 
 
+class UpdateColumnCardsMutation(graphene.Mutation):
+    class Arguments:
+        id = graphene.Int()
+        cards = graphene.JSONString()
+
+    column = graphene.Field(ColumnType)
+    
+    def mutate(self, info, id, cards):
+        column = Column.objects.get(id=id)
+        column.cards = cards
+        column.save()
+        return UpdateColumnCardsMutation(column=column)
+
 class Mutation(graphene.ObjectType):
     create_column = CreateColumnMutation.Field()
-
+    update_column_cards = UpdateColumnCardsMutation.Field()
 schema = graphene.Schema(query=Query, mutation=Mutation)
