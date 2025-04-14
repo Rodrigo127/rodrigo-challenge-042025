@@ -94,3 +94,11 @@ class DynamoDBService:
             }
         )
         return self.get_column(column_id)
+    
+    def remove_column(self, column_id):
+        self.table.delete_item(
+            Key={
+                'id': f'{column_id}',
+            }
+        )
+        return True

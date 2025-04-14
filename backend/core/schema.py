@@ -40,8 +40,20 @@ class UpdateColumnCardsMutation(graphene.Mutation):
         column = dynamodb.update_column_cards(id, cards, colIndex, title)
         return UpdateColumnCardsMutation(column=column)
 
+class RemoveColumnMutation(graphene.Mutation):
+    class Arguments:
+        id = graphene.String()
+
+    success = graphene.Boolean()
+
+    def mutate(self, info, id):
+        dynamodb = DynamoDBService()
+        success = dynamodb.remove_column(id)
+        return RemoveColumnMutation(success=success)
+
 class Mutation(graphene.ObjectType):
     create_column = CreateColumnMutation.Field()
     update_column_cards = UpdateColumnCardsMutation.Field()
+    remove_column = RemoveColumnMutation.Field()
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
