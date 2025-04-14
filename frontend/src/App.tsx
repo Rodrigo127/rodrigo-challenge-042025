@@ -3,9 +3,10 @@ import Header from "./components/Header";
 import { useColumnsContext } from "./hooks/use-columns-context";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { Card } from "./types";
+import { CgAdd } from "react-icons/cg";
 
 function App() {
-  const { columns, handleMoveCard } = useColumnsContext();
+  const { columns, handleMoveCard, handleAddColumn } = useColumnsContext();
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -28,6 +29,14 @@ function App() {
             <Column key={column.id} column={column} />
           ))}
         </DndContext>
+        <div className="rounded-xl flex items-center justify-center">
+          <button
+            className="bg-rose-400 text-white px-2 py-2 rounded-xl"
+            onClick={handleAddColumn}
+          >
+            <CgAdd size={24} />
+          </button>
+        </div>
       </main>
     </div>
   );

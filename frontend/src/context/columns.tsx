@@ -1,7 +1,11 @@
 import { createContext, useState, useEffect } from "react";
 import { Column as ColumnType, Card as CardType } from "../types";
 import { useQuery, useMutation } from "@apollo/client";
-import { GET_COLUMNS, UPDATE_COLUMN_CARDS } from "../graphql/queries";
+import {
+  GET_COLUMNS,
+  UPDATE_COLUMN_CARDS,
+  CREATE_COLUMN,
+} from "../graphql/queries";
 
 interface ColumnsContextType {
   columns: ColumnType[];
@@ -39,6 +43,7 @@ export const ColumnsProvider = ({
 }) => {
   const { loading, error, data } = useQuery(GET_COLUMNS);
   const [updateColumnCards] = useMutation(UPDATE_COLUMN_CARDS);
+  const [createColumn] = useMutation(CREATE_COLUMN);
   const [columns, setColumns] = useState<ColumnType[]>([]);
   console.log(data);
 
@@ -54,6 +59,12 @@ export const ColumnsProvider = ({
   }, [data]);
 
   const handleAddColumn = () => {
+    createColumn({
+      variables: {
+        title: `Column ${columns.length + 1}`,
+      },
+    });
+
     setColumns([
       ...columns,
       {
@@ -93,7 +104,7 @@ export const ColumnsProvider = ({
       },
     });
 
-    column.cards = [...(column.cards as CardType[]), newCard];
+    column.cards = [...(column.cards as CardType[]), newCard] as CardType[];
     setColumns([...columns]);
   };
 

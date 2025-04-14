@@ -14,10 +14,12 @@ export const GET_COLUMNS = gql`
 export const CREATE_COLUMN = gql`
   mutation CreateColumn($title: String!) {
     createColumn(title: $title) {
-      id
-      title
-      cards
-      order
+      column {
+        id
+        title
+        cards
+        order
+      }
     }
   }
 `;
