@@ -20,7 +20,7 @@ class DynamoDBService:
             response = self.table.update_item(
                 Key={
                     'id': 'COUNTER',
-                    'order': 'COUNTER'
+                    'order': 999
                 },
                 UpdateExpression='SET nextIndex = if_not_exists(nextIndex, :start) + :inc',
                 ExpressionAttributeValues={
@@ -29,18 +29,21 @@ class DynamoDBService:
                 },
                 ReturnValues='UPDATED_NEW'
             )
-            return response['Attributes']['nextIndex']
+            return int(response['Attributes']['nextIndex'])
         except Exception as e:
             # If counter doesn't exist, create it
-            self.table.put_item(
-                Item={
-                    'id': 'COUNTER',
-                    'order': 'COUNTER',
-                    'nextIndex': 1
-                }
-            )
-            print('error', e)
-            return 1
+            try:
+                self.table.put_item(
+                    Item={
+                        'id': 'COUNTER',
+                        'order': 999,
+                        'nextIndex': 1
+                    }
+                )
+                return 1
+            except Exception as e:
+                print('error', e)
+                return 1
 
     def create_column(self, title):
         column_id = str(uuid.uuid4())
@@ -48,7 +51,7 @@ class DynamoDBService:
         self.table.put_item(
             Item={
                 'id': f'{column_id}',
-                'order': f'{sk}',
+                'order': sk,
                 'title': title,
                 'cards': [],
                 'createdAt': datetime.now().isoformat(),
@@ -61,7 +64,7 @@ class DynamoDBService:
         response = self.table.get_item(
             Key={
                 'id': f'{column_id}',
-                'order': f'{sk}'
+                'order': sk
             }
         )
         return response.get('Item')

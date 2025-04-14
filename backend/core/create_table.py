@@ -29,7 +29,7 @@ try:
             },
             {
                 'AttributeName': 'order',
-                'AttributeType': 'S'
+                'AttributeType': 'N'
             }
         ],
         ProvisionedThroughput={

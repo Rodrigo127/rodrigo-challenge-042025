@@ -4,7 +4,7 @@ from .services.dynamodb_service import DynamoDBService
 
 class ColumnType(graphene.ObjectType):
     id = graphene.String()
-    order = graphene.String()
+    order = graphene.Int()
     title = graphene.String()
     cards = graphene.JSONString()
 
@@ -29,7 +29,7 @@ class CreateColumnMutation(graphene.Mutation):
 class UpdateColumnCardsMutation(graphene.Mutation):
     class Arguments:
         id = graphene.String()
-        order = graphene.String()
+        order = graphene.Int()
         cards = graphene.JSONString()
 
     column = graphene.Field(ColumnType)
