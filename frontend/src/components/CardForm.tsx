@@ -53,7 +53,9 @@ export default function CardForm({
           value={newDescription}
           onChange={(e) => setNewDescription(e.target.value)}
         />
-        <button className="bg-amber-300 rounded-md p-2">Add Card</button>
+        <button className="bg-amber-300 rounded-md p-2">
+          {id ? "Edit Card" : "Add Card"}
+        </button>
       </form>
     </Modal>
   );
