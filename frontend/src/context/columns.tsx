@@ -128,18 +128,32 @@ export const ColumnsProvider = ({
     columnId: number,
     id: number
   ) => {
-    setColumns(
-      columns.map((column) =>
-        column.id === columnId
-          ? {
-              ...column,
-              cards: column.cards.map((card) =>
-                card.id === id ? { ...card, title, description } : card
-              ),
-            }
-          : column
-      )
+    const column = columns.find((column) => column.id === columnId);
+    if (!column) return;
+
+    const updatedCards = (column.cards as CardType[]).map((card) =>
+      card.id === id ? { ...card, title, description } : card
     );
+
+    updateColumnCards({
+      variables: {
+        id: columnId,
+        cards: JSON.stringify(updatedCards),
+        order: column.order,
+        title: column.title,
+      },
+    }).then(() => {
+      setColumns(
+        columns.map((column) =>
+          column.id === columnId
+            ? {
+                ...column,
+                cards: updatedCards,
+              }
+            : column
+        )
+      );
+    });
   };
 
   const handleMoveCard = (
