@@ -23,12 +23,14 @@ export const CREATE_COLUMN = gql`
 `;
 
 export const UPDATE_COLUMN_CARDS = gql`
-  mutation UpdateColumnCards($id: String!, $cards: JSONString!, $order: String!) {
+  mutation updateColumnCards($id: String!, $cards: JSONString!, $order: String!) {
     updateColumnCards(id: $id, cards: $cards, order: $order) {
-      id
-      title
-      cards
-      order
+      column {
+        id
+        order
+        title
+        cards
+      }
     }
   }
 `;

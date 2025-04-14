@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect } from "react";
 import { Column as ColumnType, Card as CardType } from "../types";
 import { useQuery, useMutation } from "@apollo/client";
-import { GET_COLUMNS, CREATE_COLUMN } from "../graphql/queries";
+import { GET_COLUMNS, UPDATE_COLUMN_CARDS } from "../graphql/queries";
 
 interface ColumnsContextType {
   columns: ColumnType[];
@@ -38,7 +38,9 @@ export const ColumnsProvider = ({
   children: React.ReactNode;
 }) => {
   const { loading, error, data } = useQuery(GET_COLUMNS);
+  const [updateColumnCards] = useMutation(UPDATE_COLUMN_CARDS);
   const [columns, setColumns] = useState<ColumnType[]>([]);
+  console.log(data);
 
   useEffect(() => {
     if (data) {
@@ -75,23 +77,24 @@ export const ColumnsProvider = ({
     description: string,
     columnId: number
   ) => {
-    setColumns(
-      columns.map((column) =>
-        column.id === columnId
-          ? {
-              ...column,
-              cards: [
-                ...column.cards,
-                {
-                  id: column.cards.length + 1,
-                  title,
-                  description,
-                },
-              ],
-            }
-          : column
-      )
-    );
+    const column = columns.find((column) => column.id === columnId);
+    if (!column) return;
+    const newCard = {
+      id: `${column.id}-${column.cards.length + 1}`,
+      title,
+      description,
+    };
+
+    updateColumnCards({
+      variables: {
+        id: columnId,
+        cards: JSON.stringify([...(column.cards as CardType[]), newCard]),
+        order: column.order,
+      },
+    });
+
+    column.cards = [...(column.cards as CardType[]), newCard];
+    setColumns([...columns]);
   };
 
   const handleEditCard = (
