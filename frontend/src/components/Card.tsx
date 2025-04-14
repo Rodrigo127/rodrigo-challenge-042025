@@ -10,7 +10,7 @@ export default function Card({
   columnId,
 }: {
   card: CardType;
-  columnId: number;
+  columnId: string;
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const { handleEditCard, handleDeleteCard } = useColumnsContext();
@@ -29,7 +29,7 @@ export default function Card({
     setIsDeleting(false);
   };
 
-  const handleEdit = (title: string, description: string, columnId: number) => {
+  const handleEdit = (title: string, description: string, columnId: string) => {
     handleEditCard(title, description, columnId, card.id);
     setIsEditing(false);
   };

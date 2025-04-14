@@ -1,12 +1,12 @@
 
 export interface Card {
-  id: number;
+  id: string;
   title: string;
   description: string;
 }
 
 export interface Column {
-  id: number;
+  id: string;
   title: string;
   cards: Card[] | string;
   order: number;

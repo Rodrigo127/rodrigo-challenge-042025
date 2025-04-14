@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useColumnsContext } from "../hooks/use-columns-context";
 import CardForm from "./CardForm";
-import { Column as ColumnType } from "../types";
+import { Column as ColumnType, Card as CardType } from "../types";
 import Card from "./Card";
 import { useDroppable } from "@dnd-kit/core";
 
@@ -73,7 +73,7 @@ export default function Column({ column }: { column: ColumnType }) {
         className={`flex flex-col gap-1 flex-1 p-3 scrollbar-hidden ${isOverStyle}`}
         ref={setNodeRef}
       >
-        {column.cards.map((card) => (
+        {(column.cards as CardType[]).map((card) => (
           <Card key={card.id} card={card} columnId={column.id} />
         ))}
         <button className="text-xs text-gray-500" onClick={onAddCard}>

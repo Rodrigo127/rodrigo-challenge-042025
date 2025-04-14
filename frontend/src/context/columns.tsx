@@ -12,21 +12,22 @@ interface ColumnsContextType {
   columns: ColumnType[];
   handleAddColumn: () => void;
   handleEditColumn: (column: ColumnType, newTitle: string) => void;
-  handleAddCard: (title: string, description: string, columnId: number) => void;
+  handleAddCard: (title: string, description: string, columnId: string) => void;
   handleEditCard: (
     title: string,
     description: string,
-    columnId: number,
-    id: number
+    columnId: string,
+    id: string
   ) => void;
   handleMoveCard: (
     card: CardType,
-    originalColumnId: number,
-    targetColumnId: number
+    originalColumnId: string,
+    targetColumnId: string
   ) => void;
-  handleDeleteCard: (cardId: number, columnId: number) => void;
+  handleDeleteCard: (cardId: string, columnId: string) => void;
 }
 
+// eslint-disable-next-line
 export const ColumnsContext = createContext<ColumnsContextType>({
   columns: [],
   handleAddColumn: () => {},
@@ -42,7 +43,7 @@ export const ColumnsProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const { loading, error, data } = useQuery(GET_COLUMNS);
+  const { data } = useQuery(GET_COLUMNS);
   const [updateColumnCards] = useMutation(UPDATE_COLUMN_CARDS);
   const [createColumn] = useMutation(CREATE_COLUMN);
   const [columns, setColumns] = useState<ColumnType[]>([]);
@@ -100,7 +101,7 @@ export const ColumnsProvider = ({
   const handleAddCard = (
     title: string,
     description: string,
-    columnId: number
+    columnId: string
   ) => {
     const column = columns.find((column) => column.id === columnId);
     if (!column) return;
@@ -127,8 +128,8 @@ export const ColumnsProvider = ({
   const handleEditCard = (
     title: string,
     description: string,
-    columnId: number,
-    id: number
+    columnId: string,
+    id: string
   ) => {
     const column = columns.find((column) => column.id === columnId);
     if (!column) return;
@@ -160,8 +161,8 @@ export const ColumnsProvider = ({
 
   const handleMoveCard = (
     card: CardType,
-    originalColumnId: number,
-    targetColumnId: number
+    originalColumnId: string,
+    targetColumnId: string
   ) => {
     if (originalColumnId === targetColumnId) return;
     const originalColumn = columns.find(
@@ -208,7 +209,7 @@ export const ColumnsProvider = ({
     });
   };
 
-  const handleDeleteCard = (cardId: number, columnId: number) => {
+  const handleDeleteCard = (cardId: string, columnId: string) => {
     const column = columns.find((column) => column.id === columnId);
     if (!column) return;
     const updatedCards = (column.cards as CardType[]).filter(

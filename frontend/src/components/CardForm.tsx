@@ -5,14 +5,14 @@ interface CardFormProps {
   onClose: () => void;
   title?: string;
   description?: string;
-  columnId: number;
+  columnId: string;
   onSubmit: (
     title: string,
     description: string,
-    columnId: number,
-    id?: number
+    columnId: string,
+    id?: string
   ) => void;
-  id?: number;
+  id?: string;
 }
 
 export default function CardForm({

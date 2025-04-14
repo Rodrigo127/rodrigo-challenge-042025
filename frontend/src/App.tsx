@@ -15,7 +15,7 @@ function App() {
 
     handleMoveCard(
       active.data.current?.card as Card,
-      active.data.current?.columnId as number,
+      active.data.current?.columnId,
       over.id as string
     );
   };
