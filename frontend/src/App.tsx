@@ -31,9 +31,9 @@ function App() {
               <Column key={column.id} column={column} />
             ))}
         </DndContext>
-        <div className="rounded-xl flex items-center justify-center">
+        <div className="rounded-xl flex items-start justify-center">
           <button
-            className="bg-rose-400 text-white px-2 py-2 rounded-xl"
+            className=" text-gray-500 px-2 py-2 rounded-xl"
             onClick={handleAddColumn}
           >
             <CgAdd size={24} />
