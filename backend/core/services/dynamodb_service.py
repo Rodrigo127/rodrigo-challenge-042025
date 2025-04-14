@@ -81,16 +81,17 @@ class DynamoDBService:
         return items
 
 
-    def update_column_cards(self, column_id, cards, sk):
+    def update_column_cards(self, column_id, cards, sk, title):
         self.table.update_item(
             Key={
                 'id': f'{column_id}',
-                'order': f'{sk}'
+                'order': sk
             },
-            UpdateExpression='SET cards = :cards, updatedAt = :now',
+            UpdateExpression='SET cards = :cards, updatedAt = :now, title = :title',
             ExpressionAttributeValues={
                 ':cards': cards,
-                ':now': datetime.now().isoformat()
+                ':now': datetime.now().isoformat(),
+                ':title': title
             }
         )
         return self.get_column(column_id, sk)

@@ -31,12 +31,13 @@ class UpdateColumnCardsMutation(graphene.Mutation):
         id = graphene.String()
         order = graphene.Int()
         cards = graphene.JSONString()
+        title = graphene.String()
 
     column = graphene.Field(ColumnType)
     
-    def mutate(self, info, id, order, cards):
+    def mutate(self, info, id, order, cards, title):
         dynamodb = DynamoDBService()
-        column = dynamodb.update_column_cards(id, cards, order)
+        column = dynamodb.update_column_cards(id, cards, order, title)
         return UpdateColumnCardsMutation(column=column)
 
 class Mutation(graphene.ObjectType):
