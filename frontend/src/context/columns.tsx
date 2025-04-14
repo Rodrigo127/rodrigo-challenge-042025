@@ -5,6 +5,7 @@ import {
   GET_COLUMNS,
   UPDATE_COLUMN_CARDS,
   CREATE_COLUMN,
+  REMOVE_COLUMN,
 } from "../graphql/queries";
 import { v4 as uuidv4 } from "uuid";
 
@@ -26,6 +27,7 @@ interface ColumnsContextType {
   ) => void;
   handleDeleteCard: (cardId: string, columnId: string) => void;
   handleReorderColumns: (columns: ColumnType[]) => void;
+  handleRemoveColumn: (columnId: string) => void;
 }
 
 // eslint-disable-next-line
@@ -38,6 +40,7 @@ export const ColumnsContext = createContext<ColumnsContextType>({
   handleMoveCard: () => {},
   handleDeleteCard: () => {},
   handleReorderColumns: () => {},
+  handleRemoveColumn: () => {},
 });
 
 export const ColumnsProvider = ({
@@ -48,6 +51,7 @@ export const ColumnsProvider = ({
   const { data } = useQuery(GET_COLUMNS);
   const [updateColumnCards] = useMutation(UPDATE_COLUMN_CARDS);
   const [createColumn] = useMutation(CREATE_COLUMN);
+  const [removeColumn] = useMutation(REMOVE_COLUMN);
   const [columns, setColumns] = useState<ColumnType[]>([]);
 
   useEffect(() => {
@@ -256,6 +260,16 @@ export const ColumnsProvider = ({
     });
   };
 
+  const handleRemoveColumn = (columnId: string) => {
+    removeColumn({
+      variables: {
+        id: columnId,
+      },
+    }).then(() => {
+      setColumns(columns.filter((column) => column.id !== columnId));
+    });
+  };
+
   const valueToShare = {
     columns,
     handleAddColumn,
@@ -265,6 +279,7 @@ export const ColumnsProvider = ({
     handleMoveCard,
     handleDeleteCard,
     handleReorderColumns,
+    handleRemoveColumn,
   };
 
   return (

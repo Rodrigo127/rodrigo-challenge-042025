@@ -4,12 +4,16 @@ import CardForm from "./CardForm";
 import { Column as ColumnType, Card as CardType } from "../types";
 import Card from "./Card";
 import { useDroppable } from "@dnd-kit/core";
+import { FaEdit, FaTrash } from "react-icons/fa";
+import ConfirmForm from "./ConfirmForm";
 
 export default function Column({ column }: { column: ColumnType }) {
-  const { handleEditColumn, handleAddCard } = useColumnsContext();
+  const { handleEditColumn, handleAddCard, handleRemoveColumn } =
+    useColumnsContext();
   const [isEditing, setIsEditing] = useState(false);
   const [newTitle, setNewTitle] = useState(column.title);
   const [isAddingCard, setIsAddingCard] = useState(false);
+  const [isRemovingColumn, setIsRemovingColumn] = useState(false);
 
   const onEditColumn = () => {
     setIsEditing(true);
@@ -22,6 +26,11 @@ export default function Column({ column }: { column: ColumnType }) {
 
   const onAddCard = () => {
     setIsAddingCard(true);
+  };
+
+  const onRemoveColumn = () => {
+    handleRemoveColumn(column.id);
+    setIsRemovingColumn(false);
   };
 
   const { setNodeRef, isOver } = useDroppable({
@@ -50,18 +59,23 @@ export default function Column({ column }: { column: ColumnType }) {
       }}
     />
   ) : (
-    <div className="flex">
+    <div className="flex justify-between">
       <h2 className="text-2xl font-bold pb-2 px-3 pt-3 truncate">
         {column.title}
       </h2>
-      <div className="flex-1 flex pb-2">
+      <div className="flex pb-2">
         <button
-          className="text-xs text-gray-500 h-full flex flex-col justify-end pr-2"
+          className="text-xs text-gray-500 h-full flex flex-col justify-center pr-2"
           onClick={onEditColumn}
         >
-          Edit
+          <FaEdit />
         </button>
-        <div className="flex-1 flex justify-end items-center"></div>
+        <button
+          className="text-xs text-gray-500 h-full flex flex-col justify-center pr-2"
+          onClick={() => setIsRemovingColumn(true)}
+        >
+          <FaTrash />
+        </button>
       </div>
     </div>
   );
@@ -85,6 +99,13 @@ export default function Column({ column }: { column: ColumnType }) {
           onClose={() => setIsAddingCard(false)}
           onSubmit={handleAddCard}
           columnId={column.id}
+        />
+      )}
+      {isRemovingColumn && (
+        <ConfirmForm
+          onClose={() => setIsRemovingColumn(false)}
+          onConfirm={onRemoveColumn}
+          title={column.title}
         />
       )}
     </div>

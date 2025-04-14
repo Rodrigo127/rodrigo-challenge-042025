@@ -36,3 +36,11 @@ export const UPDATE_COLUMN_CARDS = gql`
     }
   }
 `;
+
+export const REMOVE_COLUMN = gql`
+  mutation RemoveColumn($id: String!) {
+    removeColumn(id: $id) {
+      success
+    }
+  }
+`;
