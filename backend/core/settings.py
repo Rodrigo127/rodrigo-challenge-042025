@@ -126,3 +126,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 GRAPHENE = {
     "SCHEMA": "core.schema.schema"
 }
+
+DYNAMODB_ENDPOINT_URL = 'http://localhost:8000'
+DYNAMODB_TABLE_NAME = 'columns'

@@ -1,20 +1,19 @@
+# schema.py
 import graphene
-from graphene_django.types import DjangoObjectType
-from columns.models import Column
+from .services.dynamodb_service import DynamoDBService
 
-class ColumnType(DjangoObjectType):
-    class Meta:
-        model = Column
-        fields = ("id", "title", "cards")
+class ColumnType(graphene.ObjectType):
+    id = graphene.String()
+    title = graphene.String()
+    cards = graphene.JSONString()
 
 class Query(graphene.ObjectType):
-    hello = graphene.String(default_value="Hi!")
-
     columns = graphene.List(ColumnType)
 
     def resolve_columns(self, info):
-        return Column.objects.all()
-    
+        dynamodb = DynamoDBService()
+        return dynamodb.get_columns()
+
 class CreateColumnMutation(graphene.Mutation):
     class Arguments:
         title = graphene.String()
@@ -22,25 +21,25 @@ class CreateColumnMutation(graphene.Mutation):
     column = graphene.Field(ColumnType)
     
     def mutate(self, info, title):
-        column = Column(title=title)
-        column.save()
+        dynamodb = DynamoDBService()
+        column = dynamodb.create_column(title)
         return CreateColumnMutation(column=column)
-
 
 class UpdateColumnCardsMutation(graphene.Mutation):
     class Arguments:
-        id = graphene.Int()
+        id = graphene.String()
         cards = graphene.JSONString()
+        sk = graphene.String()
 
     column = graphene.Field(ColumnType)
     
-    def mutate(self, info, id, cards):
-        column = Column.objects.get(id=id)
-        column.cards = cards
-        column.save()
+    def mutate(self, info, id, cards, sk):
+        dynamodb = DynamoDBService()
+        column = dynamodb.update_column_cards(id, cards, sk)
         return UpdateColumnCardsMutation(column=column)
 
 class Mutation(graphene.ObjectType):
     create_column = CreateColumnMutation.Field()
     update_column_cards = UpdateColumnCardsMutation.Field()
+
 schema = graphene.Schema(query=Query, mutation=Mutation)
