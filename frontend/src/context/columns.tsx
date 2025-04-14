@@ -176,12 +176,14 @@ export const ColumnsProvider = ({
     );
     const targetColumn = columns.find((column) => column.id === targetColumnId);
     if (!originalColumn || !targetColumn) return;
+
     const updatedCardsOriginalColumn = (
       originalColumn.cards as CardType[]
     ).filter((c) => c.id !== card.id);
+
     const updatedCardsTargetColumn = [
-      ...(targetColumn.cards as CardType[]),
       card,
+      ...(targetColumn.cards as CardType[]),
     ];
 
     updateColumnCards({
