@@ -184,16 +184,31 @@ export const ColumnsProvider = ({
   };
 
   const handleDeleteCard = (cardId: number, columnId: number) => {
-    setColumns(
-      columns.map((column) =>
-        column.id === columnId
-          ? {
-              ...column,
-              cards: column.cards.filter((card) => card.id !== cardId),
-            }
-          : column
-      )
+    const column = columns.find((column) => column.id === columnId);
+    if (!column) return;
+    const updatedCards = (column.cards as CardType[]).filter(
+      (card) => card.id !== cardId
     );
+
+    updateColumnCards({
+      variables: {
+        id: columnId,
+        cards: JSON.stringify(updatedCards),
+        order: column.order,
+        title: column.title,
+      },
+    }).then(() => {
+      setColumns(
+        columns.map((column) =>
+          column.id === columnId
+            ? {
+                ...column,
+                cards: updatedCards,
+              }
+            : column
+        )
+      );
+    });
   };
 
   const valueToShare = {
