@@ -6,15 +6,20 @@ from datetime import datetime
 import os
 
 class DynamoDBService:
-    def __init__(self):
-        self.dynamodb = boto3.resource(
-            'dynamodb',
-            endpoint_url=os.getenv('DYNAMODB_ENDPOINT_URL', 'http://localhost:8000'),
-            region_name='us-west-2',
-            aws_access_key_id='dummy',
-            aws_secret_access_key='dummy'
-        )
+    def __init__(self, dynamodb = None):
+        if dynamodb:
+            self.dynamodb = dynamodb
+        else:
+            self.dynamodb = boto3.resource(
+                'dynamodb',
+                endpoint_url=os.getenv('DYNAMODB_ENDPOINT_URL', 'http://localhost:8000'),
+                region_name='us-west-2',
+                aws_access_key_id='dummy',
+                aws_secret_access_key='dummy'
+            )
+
         self.table = self.dynamodb.Table('columns')
+        # print the id of the variable set by the python interpreter
 
     def get_next_sk(self):
         try:
